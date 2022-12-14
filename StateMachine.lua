@@ -42,7 +42,8 @@ function StateMachine:init(states)
 		render = function() end,
 		update = function() end,
 		enter = function() end,
-		exit = function() end
+		exit = function() end, 
+		pause = function() end,
 	}
 	self.states = states or {} -- [name] -> [function that returns states]
 	self.current = self.empty
@@ -61,4 +62,8 @@ end
 
 function StateMachine:render()
 	self.current:render()
+end
+
+function StateMachine:pause(paused)
+	return self.current:pause(paused)
 end
