@@ -19,6 +19,7 @@ BIRD_HEIGHT = 24
 
 local PAUSE_IMAGE = love.graphics.newImage('assets/sprites/pause.png')
 
+
 function PlayState:init()
     self.bird = Bird()
     self.pipePairs = {}
@@ -142,5 +143,6 @@ end
 
 function PlayState:pause(paused)
     self.paused = paused
+    sounds['pause']:play()
     return true
 end
