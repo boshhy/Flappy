@@ -17,14 +17,15 @@ PIPE_HEIGHT = 288
 BIRD_WIDTH = 38
 BIRD_HEIGHT = 24
 
+-- Load a pause image
 local PAUSE_IMAGE = love.graphics.newImage('assets/sprites/pause.png')
-
 
 function PlayState:init()
     self.bird = Bird()
     self.pipePairs = {}
     self.timer = 0
     self.score = 0
+    -- To be used to see if the game is paused
     self.paused = false
 
     -- initialize our last recorded Y value for a gap placement to base other gaps off of
@@ -32,6 +33,8 @@ function PlayState:init()
 end
 
 function PlayState:update(dt)
+    -- If the game is not paused run the game,
+    -- otherwise do not update anything
     if not self.paused then
         -- update timer for pipe spawning
         self.timer = self.timer + dt
@@ -48,7 +51,7 @@ function PlayState:update(dt)
             -- add a new pipe pair at the end of the screen at our new Y
             table.insert(self.pipePairs, PipePair(y))
 
-            -- reset timer
+            -- reset timer to randomize width space of pipes
             self.timer = math.random(-1,0)
         end
 
@@ -95,8 +98,8 @@ function PlayState:update(dt)
         -- update bird based on gravity and input
         self.bird:update(dt)
 
-        -- reset if we get to the ground
-        if self.bird.y > VIRTUAL_HEIGHT - 15 then
+        -- reset if we get to the ground, adjusted bird collison
+        if self.bird.y + self.bird.height - 2 > VIRTUAL_HEIGHT - 12 then
             sounds['explosion']:play()
             sounds['hurt']:play()
 
@@ -117,11 +120,13 @@ function PlayState:render()
 
     self.bird:render()
     self.enter()
+
+    -- If paused load the pause image
     if self.paused then
         love.graphics.draw(PAUSE_IMAGE, 
-        VIRTUAL_WIDTH/2 - (PAUSE_IMAGE:getWidth() * 0.12)/2, 
-        VIRTUAL_HEIGHT/2 - (PAUSE_IMAGE:getHeight() * 0.12)/2, 
-        0, 0.12, 0.12)
+        VIRTUAL_WIDTH/2 - (PAUSE_IMAGE:getWidth() / 10)/2, 
+        VIRTUAL_HEIGHT/2 - (PAUSE_IMAGE:getHeight() / 10)/2, 
+        0, 0.1, 0.1)
     end
 end
 
@@ -141,6 +146,10 @@ function PlayState:exit()
     scrolling = false
 end
 
+-- Get paused variable from main and set it according for playState
+-- Play pause noise everytime pause function is called
+-- Return True to let Main.lua know we are in the playState, so we 
+-- don't pause on the ScoreState, TitleScreenState or CoutdownState
 function PlayState:pause(paused)
     self.paused = paused
     sounds['pause']:play()

@@ -64,6 +64,8 @@ function StateMachine:render()
 	self.current:render()
 end
 
+
+-- This pause function will only be used with the PlayState
 function StateMachine:pause(paused)
 	return self.current:pause(paused)
 end

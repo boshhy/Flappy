@@ -100,7 +100,7 @@ function love.load()
     -- initialize our virtual resolution
     push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
         vsync = true,
-        fullscreen = false,
+        fullscreen = true,
         resizable = true
     })
 
@@ -131,6 +131,8 @@ function love.keypressed(key)
     if key == 'escape' then
         love.event.quit()
     end
+    
+    -- If 'p' is pressed and PlayState returns true then negate scrolling
     if key == 'p' and gStateMachine:pause(scrolling) then
         scrolling = not scrolling
     end
